@@ -1,3 +1,4 @@
+import Header from '@/components/Header'
 import { Button } from "@/components/Button";
 import { ChartNoAxesCombined, PiggyBank, SwatchBook } from "lucide-react";
 import Hero from "@/components/Hero";
@@ -22,7 +23,8 @@ const products = [
 
 export default function Home() {
   return (
-    <section className="bg-background-container mt-8 flex flex-col gap-3 items-center justify-center font-sans">
+    <section className="bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans">
+      <Header />
       <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start">
         <Hero />
       </main>
@@ -31,7 +33,7 @@ export default function Home() {
           products.map((product, idx) => {
             const Icon = product.icon
             return (
-              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background/50 shadow-md shadow-tertiary/40" key={idx}>
+              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background-container/40 shadow-md shadow-tertiary/40" key={idx}>
                 <div className="flex gap-2 items-center align-middle">
                   <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary text-on-secondary">
                     <Icon className="" />

@@ -7,29 +7,29 @@
 @theme {
 
   /* === Light Theme === */
-  --color-primary: #007B8A;
+  --color-primary: #1ecbe1;
   --color-on-primary: #FFFFFF;
   --color-primary-container: #A0DDE1;
   --color-on-primary-container: #002B30;
 
-  --color-secondary: #4C6B70;
+  --color-secondary: #1ee196;
   --color-on-secondary: #FFFFFF;
   --color-secondary-container: #CFE3E6;
   --color-on-secondary-container: #0F2427;
 
-  --color-tertiary: #5B6075;
+  --color-tertiary: #1e6ae1;
   --color-on-tertiary: #FFFFFF;
   --color-tertiary-container: #D9DAE8;
   --color-on-tertiary-container: #161A2B;
 
-  --color-background: #E8F0F2;
-  --color-on-background: #212B2C;
-  --color-background-container: #FFFFFF;
-  --color-on-background-container: #1A2022;
+  --color-background: #f8fafc;
+  --color-on-background: #1a1c1e;
+  --color-background-container: #e3e8ec;
+  --color-on-background-container: #1a1c1e;
 
-  --color-surface: #E8F0F2;
+  --color-surface: #ffffff;
   --color-surface-dark: #1A2022;
-  --color-on-surface: #212B2C;
+  --color-on-surface: #1a1c1e;
   --color-on-surface-dark: #E8F0F2;
 }
 
@@ -42,8 +42,8 @@
 
   --color-secondary: #AFC8CC;
   --color-on-secondary: #1B3337;
-  --color-secondary-container: #334A4E;
-  --color-on-secondary-container: #CFE3E6;
+  --color-secondary-container: #8ef0ca;
+  --color-on-secondary-container: #107b51;
 
   --color-tertiary: #BEC1D5;
   --color-on-tertiary: #282C3E;
