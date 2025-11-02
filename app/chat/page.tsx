@@ -1,7 +1,8 @@
+import ChatWindow from "@/features/chat/components/ChatWindow"
+
 export default function Chat() {
   return (
-    <div>
-      <p>AI chat homescreen</p>
-    </div>
+    <ChatWindow />
   )
 }
+
