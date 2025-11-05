@@ -3,7 +3,7 @@ import { MessageBubble } from "./MessageBubble"
 const sampleMessages = [
   {
     user: "ai",
-    message: "Hello I am your AI financial Advisor, How Can I help?"
+    message: "Hello I aTipsm your AI financial Advisor, How Can I help?"
   },
   {
     user: "human",
@@ -16,7 +16,7 @@ const sampleMessages = [
 ]
 export default function ChatWindow() {
   return (
-    <section className="h-full flex flex-col gap-8 overflow-y-scroll">
+    <section className="h-full p-3 w-full flex flex-col gap-8 rounded-lg lg:mx-auto lg:w-11/12 lg:px-4 lg:py-3">
       {
         sampleMessages.map((details, idx) => {
           const { user, message } = details

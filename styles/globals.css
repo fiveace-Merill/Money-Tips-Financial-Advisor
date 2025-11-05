@@ -3,9 +3,16 @@
 
 /*@custom-variant dark (&:is(.dark *)); */
 
+@media(max-width: 1024px) {
+  .morph {
+    background-color: transparent;
+    backdrop-filter: blur(10px);
+    background-image: linear-gradient(to right, #ffffff 70%, rgba(0, 0, 0, 0) 30%);
+  }
+}
+
 
 @theme {
-
   /* === Light Theme === */
   --color-primary: #1ecbe1;
   --color-on-primary: #FFFFFF;

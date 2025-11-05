@@ -23,17 +23,17 @@ const products = [
 
 export default function Home() {
   return (
-    <section className="bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans">
+    <section className="bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans lg:mt-0 lg:gap-2">
       <Header />
-      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start">
+      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start md:w-9/12 lg:pt-1 lg:pb-3">
         <Hero />
       </main>
-      <div className="h-auto px-3 flex flex-col gap-8">
+      <div className="h-auto px-3 flex flex-col gap-8 lg:flex-row lg:w-10/12 lg:px-0">
         {
           products.map((product, idx) => {
             const Icon = product.icon
             return (
-              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background-container/40 shadow-md shadow-tertiary/40" key={idx}>
+              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background-container/40 shadow-md shadow-tertiary/40 md:w-9/12 md:mx-auto lg:w-auto" key={idx}>
                 <div className="flex gap-2 items-center align-middle">
                   <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary text-on-secondary">
                     <Icon className="" />
@@ -47,7 +47,7 @@ export default function Home() {
           )
         }
       </div>
-      <footer className="mt-6 px-3 pb-6 w-full">
+      <footer className="mt-6 px-3 pb-6 w-full md:w-9/12 md:mx-auto lg:w-4/12 lg:mt-2.5 lg:px-2">
         <Button>
           Start Your Financial Journey
         </Button>
