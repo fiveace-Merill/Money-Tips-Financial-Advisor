@@ -1,5 +1,8 @@
 import { ChevronsLeft, Plus, WheatOff } from "lucide-react"
-export default function ChatHistory({ onHideHistory = f => f }) {
+type ChatHistoryProps = {
+  onHideHistory?: (state: boolean) => void
+}
+export default function ChatHistory({ onHideHistory = () => { } }: ChatHistoryProps) {
   return (
     <div className="morph flex flex-col bg-background text-on-background">
       <div className="flex">

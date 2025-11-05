@@ -1,9 +1,12 @@
-"use client"
 import Link from 'next/link'
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { History, Settings, ReceiptText, TrendingUp, X, EllipsisVertical } from "lucide-react"
 
-export default function SidebarMenu({ closeSideBar = f => f }) {
+type sidebarMenuProps = {
+  closeSideBar?: (state: boolean) => void
+}
+
+export default function SidebarMenu({ closeSideBar = () => { } }: sidebarMenuProps) {
   return (
     <div className="w-full morph h-full fixed inset-x-0 inset-y-0 px-3 py-4 z-20 flex flex-col gap-4 transition-transform duration-300 lg:static lg:bg-inherit lg:gap-6">
       <X className="self-end lg:hidden" size={32} onClick={() => closeSideBar(false)} />
