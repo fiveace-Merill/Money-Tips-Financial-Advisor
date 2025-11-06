@@ -3,7 +3,7 @@ import { MessageBubble } from "./MessageBubble"
 const sampleMessages = [
   {
     user: "ai",
-    message: "Hello I aTipsm your AI financial Advisor, How Can I help?"
+    message: "Hello I am your AI financial Advisor, How Can I help?"
   },
   {
     user: "human",

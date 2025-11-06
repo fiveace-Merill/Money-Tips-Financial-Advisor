@@ -9,7 +9,7 @@ export function Button({ children, }: { children: React.ReactNode }) {
 
 export function FAB({ children }: { children: React.ReactNode }) {
   return (
-    <div className="bg-primary text-2xl text-on-primary font-semibold w-[48px] h-[48px] rounded-full flex justify-center items-center" >
+    <div className="h-[38px] w-[38px] bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container text-2xl font-semibold rounded-full flex justify-center items-center lg:w-[48px] lg:h-[48px]" >
       {children}
     </div>
   )
