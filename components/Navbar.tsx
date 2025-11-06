@@ -4,7 +4,7 @@ import { EllipsisVertical } from "lucide-react"
 
 export default function Navbar() {
   return (
-    <nav className="fixed inset-x-0 top-0 bg-background text-on-secondary-container shadow-md shadow-background my-auto py-3 px-2 flex justify-between items-center lg:justify-start lg:w-full lg:bg-surface lg:static lg:shadow-none lg:flex-start">
+    <nav className="fixed inset-x-0 top-0 bg-background text-on-secondary-container shadow-md shadow-background my-auto py-3 px-2 flex justify-between items-center lg:justify-start lg:w-11/12 lg:mx-auto lg:bg-surface lg:static lg:shadow-none lg:flex-start">
       <div className="flex gap-2 items-center">
         <Image
           src="/brand_logo.svg"
