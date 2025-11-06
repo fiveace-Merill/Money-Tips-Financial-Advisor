@@ -1,5 +1,5 @@
 import Header from '@/components/Header'
-import { Button } from "@/components/Button";
+import Footer from '@/components/Footer';
 import { ChartNoAxesCombined, PiggyBank, SwatchBook } from "lucide-react";
 import Hero from "@/components/Hero";
 
@@ -33,25 +33,21 @@ export default function Home() {
           products.map((product, idx) => {
             const Icon = product.icon
             return (
-              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background-container/40 shadow-md shadow-tertiary/40 md:w-9/12 md:mx-auto lg:w-auto" key={idx}>
-                <div className="flex gap-2 items-center align-middle">
-                  <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary text-on-secondary">
+              <div className="p-3 flex flex-col gap-1 rounded-lg bg-background-container/40 shadow-md shadow-tertiary/40 md:w-9/12 md:mx-auto lg:w-auto lg:gap-0" key={idx}>
+                <div className="flex gap-2 items-center align-middle lg:flex-col lg:gap-1 lg:items-center">
+                  <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary-container text-on-secondary-container lg:aspect-square">
                     <Icon className="" />
                   </div>
                   <h3 className="basis-9/12 font-semibold text-on-background-container">{product.title}</h3>
                 </div>
-                <p className="py-3 text-on-background">{product.description}</p>
+                <p className="py-3 text-on-background lg:text-sm lg:text-justify">{product.description}</p>
               </div>
             )
           }
           )
         }
       </div>
-      <footer className="mt-6 px-3 pb-6 w-full md:w-9/12 md:mx-auto lg:w-4/12 lg:mt-2.5 lg:px-2">
-        <Button>
-          Start Your Financial Journey
-        </Button>
-      </footer>
+      <Footer />
     </section>
   );
 }
