@@ -1,12 +1,26 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Rubik, Poppins, Roboto, Lexend, Sriracha } from "next/font/google";
 
-export const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export const rubik = Rubik({
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"]
+})
 
-export const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+export const poppins = Poppins({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "900"],
+  subsets: ["latin"]
+})
 
+export const roboto = Roboto({
+  weight: ["100", "200", "500", "600", "700"],
+  subsets: ["latin"]
+})
+
+export const lexend = Lexend({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  subsets: ["latin"]
+})
+
+export const sriracha = Sriracha({
+  weight: ["400"],
+  subsets: ["latin"]
+})
