@@ -1,4 +1,5 @@
 "use client"
+import Image from 'next/image'
 import { useState } from "react"
 import { Menu } from "lucide-react"
 import SidebarMenu from "@/features/chat/components/SidebarMenu"
@@ -14,7 +15,13 @@ export default function Navbar() {
           onClick={() => setIsOpen(true)}
         />
         <div className="flex gap-4 items-center">
-          <div className="p-3 flex justify-center items-center w-10 h-10 rounded-full bg-black text-white">FO</div>
+          <Image
+            src="/brand_logo.png"
+            width={42}
+            height={42}
+            className=""
+            alt="brand_logo"
+          />
           <p className="text-lg font-bold lg:text-2xl">Money Tips</p>
         </div>
       </nav>
