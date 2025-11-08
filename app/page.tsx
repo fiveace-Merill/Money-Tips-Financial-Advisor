@@ -1,3 +1,4 @@
+import { poppins } from '@/fonts';
 import Header from '@/components/Header'
 import Footer from '@/components/Footer';
 import { ChartNoAxesCombined, PiggyBank, SwatchBook } from "lucide-react";
@@ -23,7 +24,7 @@ const products = [
 
 export default function Home() {
   return (
-    <section className="bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans lg:mt-0 lg:gap-2">
+    <section className={`${poppins.className} bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans lg:mt-0 lg:gap-2`}>
       <Header />
       <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start md:w-9/12 lg:pt-1 lg:pb-3">
         <Hero />
@@ -38,7 +39,7 @@ export default function Home() {
                   <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary-container text-on-secondary-container lg:aspect-square">
                     <Icon className="" />
                   </div>
-                  <h3 className="basis-9/12 font-semibold text-on-background-container">{product.title}</h3>
+                  <h3 className="basis-9/12 text-md font-medium text-on-background-container">{product.title}</h3>
                 </div>
                 <p className="py-3 text-on-background lg:text-sm lg:text-justify">{product.description}</p>
               </div>

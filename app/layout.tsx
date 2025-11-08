@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { geistMono, geistSans } from "@/fonts";
+import { poppins } from "@/fonts";
 import "@/styles/globals.css";
 
 
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${poppins.className} antialiased`}
       >
         {children}
       </body>
