@@ -20,7 +20,7 @@ export default function Navbar() {
         <li className="text-xl font-semibold hover:text-secondary-container">Pricing</li>
         <li className="text-xl font-semibold hover:text-secondary-container">About</li>
       </ul>
-      <Button className="bg-primary text-on-primary text-md rounded-full">Get Started</Button>
+      <Button className="hidden lg:block bg-primary text-on-primary text-md rounded-full">Get Started</Button>
       <EllipsisVertical size={32} className="lg:hidden" />
     </nav>
   )
