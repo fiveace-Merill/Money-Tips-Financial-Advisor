@@ -1,4 +1,5 @@
 "use client"
+import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from "react"
 import { Menu } from "lucide-react"
@@ -8,13 +9,13 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   return (
     <div className="relative w-full h-full bg-inherit md:h-auto">
-      <nav className="sticky z-10 inset-x-0 top-0 py-3 px-2 flex justify-start items-center gap-6 lg:w-full lg:static">
+      <nav className="sticky z-10 inset-x-0 top-0 py-3 px-2 flex justify-start items-center gap-3 lg:gap-6 lg:w-full lg:static">
         <Menu
-          size={32}
+          size={28}
           className="cursor-pointer md:hidden"
           onClick={() => setIsOpen(true)}
         />
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-[5px] items-center">
           <Image
             src="/brand_logo.png"
             width={42}
@@ -22,7 +23,7 @@ export default function Navbar() {
             className=""
             alt="brand_logo"
           />
-          <p className="text-lg font-bold lg:text-2xl">Money Tips</p>
+          <Link href="/" className="text-lg text-secondary hover:text-on-primary-container font-bold lg:text-2xl">Money Tips</Link>
         </div>
       </nav>
       {

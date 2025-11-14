@@ -17,11 +17,11 @@ export default function Navbar() {
         <p className={`${poppins.className} text-2xl font-bold`}>Money Tips</p>
       </div>
       <ul className="hidden gap-8 justify-start mx-auto lg:flex">
-        <li className="text-xl font-semibold hover:text-secondary-container">Features</li>
-        <li className="text-xl font-semibold hover:text-secondary-container">Pricing</li>
-        <li className="text-xl font-semibold hover:text-secondary-container">About</li>
+        <li className="text-xl font-semibold hover:text-secondary/50">Features</li>
+        <li className="text-xl font-semibold hover:text-secondary/50">Pricing</li>
+        <li className="text-xl font-semibold hover:text-secondary/50">About</li>
       </ul>
-      <Button className="hidden lg:block bg-primary text-on-primary text-md rounded-full">Get Started</Button>
+      <Button className="hidden lg:flex justify-center items-center bg-primary text-on-primary text-md rounded-full">Get Started</Button>
       <EllipsisVertical size={32} className="lg:hidden" />
     </nav>
   )

@@ -17,7 +17,7 @@ export default function SidebarMenu({ closeSideBar = () => { } }: { closeSideBar
           <Link key={label} href={route}>
             <div key={label} className="hover:bg-secondary hover:text-on-secondary flex gap-3 py-3 items-center cursor-pointer focus:bg-secondary-container/50 focus:text-on-secondary-container rounded-lg px-2 transition md:h-5/6 md:aspect-square md:text-on-primary-container md:bg-primary-container lg:h-auto lg:text-on-background-container lg:bg-inherit lg:w-full lg:aspect-auto">
               {icon}
-              <p className="text-xl md:hidden lg:block lg:text-sm">{label}</p>
+              <p className="text-sm md:hidden lg:block lg:text-md">{label}</p>
             </div>
           </Link>
         ))}
@@ -26,9 +26,9 @@ export default function SidebarMenu({ closeSideBar = () => { } }: { closeSideBar
         <div className="flex gap-3 items-center cursor-pointer focus:bg-secondary-container/50 focus:text-on-secondary-container rounded-lg transition">
           <Avatar>
             <AvatarImage src="https://github.com/evilrabbit.png" alt="evilrabbit" />
-            <AvatarFallback>F0</AvatarFallback>
+            <AvatarFallback>OP</AvatarFallback>
           </Avatar>
-          <p className="text-md text-secondary/80 hover:text-secondary font-bold lg:text-lg">Fredrick Ogutu</p>
+          <p className="text-md text-secondary/80 hover:text-secondary font-bold lg:text-lg">Oscar Piastri</p>
         </div>
         <EllipsisVertical size={28} />
       </div>
