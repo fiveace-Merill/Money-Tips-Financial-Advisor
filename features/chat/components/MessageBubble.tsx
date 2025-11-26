@@ -14,7 +14,7 @@ export function MessageBubble({ user, message }: Props) {
       <div className={clsx('h-9 w-9 mt-2 grow-0 bg-inherit border-background-container aspect-square rounded-full flex justify-center items-center', { 'order-2': user === 'human' })}>
         <Avatar >
           <AvatarImage src={url} className="rounded-full" />
-          <AvatarFallback className="text-xs">{user == "ai" ? "AI" : "HU"}</AvatarFallback>
+          <AvatarFallback className="text-sm">{user == "ai" ? "AI" : "HU"}</AvatarFallback>
         </Avatar>
       </div>
       <div className={clsx('basis-11/12 p-2 shadow-sm shadow-background/40 rounded-lg', { 'bg-primary text-on-primary order-1': user === 'human', 'bg-surface text-on-surface': user === 'ai' })}>
