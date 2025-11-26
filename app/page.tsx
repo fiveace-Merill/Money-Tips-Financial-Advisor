@@ -24,11 +24,13 @@ const products = [
 
 export default function Home() {
   return (
-    <section className={`${poppins.className} bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans lg:mt-0 lg:gap-2`}>
+    <section className={`${poppins.className} bg-surface mt-8 flex flex-col gap-3 items-center justify-center font-sans lg:mt-0 lg:gap-4`}>
       <Header />
-      <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start md:w-9/12 lg:pt-1 lg:pb-3">
-        <Hero />
-      </main>
+      <div className="w-full flex justify-center bg-background-container/10 py-2">
+        <main className="flex w-full max-w-3xl flex-col items-center justify-between py-16 px-8 sm:items-start md:w-9/12 lg:py-2">
+          <Hero />
+        </main>
+      </div>
       <div className="h-auto px-3 flex flex-col gap-8 lg:flex-row lg:w-10/12 lg:px-0">
         {
           products.map((product, idx) => {
@@ -39,7 +41,7 @@ export default function Home() {
                   <div className="h-[48px] w-[48px] flex justify-center items-center rounded-full bg-secondary-container text-on-secondary-container lg:aspect-square">
                     <Icon className="" />
                   </div>
-                  <h3 className="basis-9/12 text-md font-medium text-on-background-container">{product.title}</h3>
+                  <h3 className="basis-9/12 text-md font-semibold text-on-background-container">{product.title}</h3>
                 </div>
                 <p className="py-3 text-on-background lg:text-sm lg:text-justify">{product.description}</p>
               </div>

@@ -54,4 +54,3 @@ All color roles (light + dark themes) are defined in `globals.css` using Tailwin
 - **LangChain.js**
 - **Pinecone / Qdrant (Vector Database)**
 
----

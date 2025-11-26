@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { poppins } from '@/fonts'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
@@ -21,8 +22,8 @@ export default function Navbar() {
         <li className="text-xl font-semibold hover:text-secondary/50">Pricing</li>
         <li className="text-xl font-semibold hover:text-secondary/50">About</li>
       </ul>
-      <Button className="hidden lg:flex justify-center items-center bg-primary text-on-primary text-md rounded-full">Get Started</Button>
-      <EllipsisVertical size={32} className="lg:hidden" />
+      <Link href="/signup"><Button className="hidden lg:flex justify-center items-center bg-primary text-on-primary text-md rounded-full">Get Started</Button></Link>
+      <Link href="/signup"><EllipsisVertical size={32} className="lg:hidden" /></Link>
     </nav>
   )
 }
