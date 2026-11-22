@@ -81,17 +81,29 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
-    const stored = loadSessions()
-    if (stored?.length) {
-      setSessions(stored)
-      const savedActiveId = loadActiveId()
-      setActiveId(
-        savedActiveId && stored.some((session) => session.id === savedActiveId)
-          ? savedActiveId
-          : stored[0].id
-      )
+    let cancelled = false
+
+    // Hydrate after the deterministic first paint so localStorage never
+    // changes the server-rendered markup.
+    void Promise.resolve().then(() => {
+      if (cancelled) return
+
+      const stored = loadSessions()
+      if (stored?.length) {
+        setSessions(stored)
+        const savedActiveId = loadActiveId()
+        setActiveId(
+          savedActiveId && stored.some((session) => session.id === savedActiveId)
+            ? savedActiveId
+            : stored[0].id
+        )
+      }
+      setHydrated(true)
+    })
+
+    return () => {
+      cancelled = true
     }
-    setHydrated(true)
   }, [])
 
   useEffect(() => {
