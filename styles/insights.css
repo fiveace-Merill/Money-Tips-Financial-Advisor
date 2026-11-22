@@ -1,0 +1,44 @@
+.insight-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-background-container);
+  outline: none;
+  cursor: pointer;
+}
+
+.insight-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--color-surface);
+  background: color-mix(in oklab, var(--color-primary) 42%, #00363c);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.22);
+}
+
+.insight-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 3px solid var(--color-surface);
+  background: color-mix(in oklab, var(--color-primary) 42%, #00363c);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.22);
+}
+
+.insight-range:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+.insight-bar > div {
+  transition: height 320ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .insight-bar > div {
+    transition: none;
+  }
+}
