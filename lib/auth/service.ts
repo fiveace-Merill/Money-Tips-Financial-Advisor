@@ -1,5 +1,5 @@
 import { Prisma } from "@/lib/generated/prisma";
-import { prisma } from "@/lib/prisma";
+import { getPrisma } from "@/lib/prisma";
 import type { AuthUser } from "@/types/auth";
 import { getInitials } from "./initials";
 import { hashPassword, verifyPassword } from "./password";
@@ -36,7 +36,7 @@ async function createSessionForUser(user: {
   email: string;
 }) {
   const token = generateSessionToken();
-  await prisma.session.create({
+  await getPrisma().session.create({
     data: {
       tokenHash: hashSessionToken(token),
       userId: user.id,
@@ -52,7 +52,7 @@ export async function registerUser(input: RegisterSchemaInput) {
 
   let user;
   try {
-    user = await prisma.user.create({
+    user = await getPrisma().user.create({
       data: {
         email: input.email,
         name: input.name,
@@ -73,7 +73,7 @@ export async function registerUser(input: RegisterSchemaInput) {
 }
 
 export async function authenticateUser(input: LoginSchemaInput) {
-  const user = await prisma.user.findUnique({ where: { email: input.email } });
+  const user = await getPrisma().user.findUnique({ where: { email: input.email } });
   if (!user) return null;
 
   const isValid = await verifyPassword(input.password, user.passwordHash);
@@ -83,7 +83,7 @@ export async function authenticateUser(input: LoginSchemaInput) {
 }
 
 export async function getUserFromToken(token: string): Promise<AuthUser | null> {
-  const session = await prisma.session.findUnique({
+  const session = await getPrisma().session.findUnique({
     where: { tokenHash: hashSessionToken(token) },
     include: { user: true },
   });
@@ -91,7 +91,7 @@ export async function getUserFromToken(token: string): Promise<AuthUser | null> 
   if (!session) return null;
 
   if (session.expiresAt <= new Date()) {
-    await prisma.session
+    await getPrisma().session
       .delete({ where: { id: session.id } })
       .catch(() => undefined);
     return null;
@@ -101,7 +101,7 @@ export async function getUserFromToken(token: string): Promise<AuthUser | null> 
 }
 
 export async function destroySession(token: string): Promise<void> {
-  await prisma.session.deleteMany({
+  await getPrisma().session.deleteMany({
     where: { tokenHash: hashSessionToken(token) },
   });
 }
