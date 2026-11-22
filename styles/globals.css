@@ -11,6 +11,162 @@
   }
 }
 
+/* ============================================================
+   Landing page — design system extensions
+   ============================================================ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem;
+}
+
+/* Animated underline for navigation links */
+.nav-link {
+  position: relative;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: var(--color-on-background);
+  transition: color 200ms ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 250ms ease;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: color-mix(in oklab, var(--color-primary) 55%, var(--color-on-background));
+}
+
+.nav-link:hover::after,
+.nav-link:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.nav-link:focus-visible {
+  outline: none;
+}
+
+/* Subtle blueprint grid used behind the hero */
+.landing-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in oklab, var(--color-on-background) 7%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklab, var(--color-on-background) 7%, transparent) 1px, transparent 1px);
+  background-size: 52px 52px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 15%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, #000 15%, transparent 100%);
+}
+
+/* Accessible "strong" roles: the bright brand cyan is kept for decoration,
+   while these darker variants are used wherever text must remain readable. */
+.landing-solid-primary {
+  background-color: color-mix(in oklab, var(--color-primary) 42%, #00363c);
+  color: #ffffff;
+  transition: background-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+.landing-solid-primary:hover {
+  background-color: color-mix(in oklab, var(--color-primary) 32%, #00363c);
+}
+
+.landing-accent-text {
+  color: color-mix(in oklab, var(--color-primary) 42%, #00363c);
+}
+
+/* On dark surfaces the accent must stay light to remain readable. */
+.dark .landing-accent-text {
+  color: var(--color-primary);
+}
+
+.dark .landing-text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    #7fe9f2 0%,
+    #b7c4ff 55%,
+    #7fe9f2 100%
+  );
+}
+
+/* Soft ambient colour orbs */
+.landing-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: glow-breathe 9s ease-in-out infinite;
+}
+
+.landing-glow--primary {
+  background: color-mix(in oklab, var(--color-primary) 55%, transparent);
+}
+
+.landing-glow--secondary {
+  background: color-mix(in oklab, var(--color-secondary) 45%, transparent);
+}
+
+.landing-glow--tertiary {
+  background: color-mix(in oklab, var(--color-tertiary) 35%, transparent);
+}
+
+/* Frosted glass surface for the sticky header */
+.landing-glass {
+  background: color-mix(in oklab, var(--color-surface) 82%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+/* Readable gradient text — darkened for sufficient contrast on light surfaces */
+.landing-text-gradient {
+  background-image: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--color-primary) 62%, #00363c) 0%,
+    color-mix(in oklab, var(--color-tertiary) 82%, #101a33) 55%,
+    color-mix(in oklab, var(--color-primary) 55%, #00363c) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.float-slow {
+  animation: float-slow 7s ease-in-out infinite;
+}
+
+.typing-dot {
+  animation: typing 1.3s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: 160ms; }
+.typing-dot:nth-child(3) { animation-delay: 320ms; }
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.1); }
+}
+
+@keyframes typing {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-4px); opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .landing-glow,
+  .float-slow,
+  .typing-dot { animation: none; }
+}
 
 @theme {
   /* === Light Theme === */
@@ -28,6 +184,9 @@
   --color-on-tertiary: #FFFFFF;
   --color-tertiary-container: #D9DAE8;
   --color-on-tertiary-container: #161A2B;
+
+  --color-destructive: #b42318;
+  --color-on-destructive: #FFFFFF;
 
   --color-background: #f8fafc;
   --color-on-background: #1a1c1e;
@@ -50,12 +209,15 @@
   --color-secondary: #AFC8CC;
   --color-on-secondary: #1B3337;
   --color-secondary-container: #8ef0ca;
-  --color-on-secondary-container: #107b51;
+  --color-on-secondary-container: #063d29;
 
   --color-tertiary: #BEC1D5;
   --color-on-tertiary: #282C3E;
   --color-tertiary-container: #414559;
   --color-on-tertiary-container: #D9DAE8;
+
+  --color-destructive: #FF8A80;
+  --color-on-destructive: #2B0B08;
 
   --color-background: #0F1415;
   --color-on-background: #E0E5E6;

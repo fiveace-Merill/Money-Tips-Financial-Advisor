@@ -1,9 +1,9 @@
-import Navbar from "./Navbar";
+import Navbar from "./Navbar"
 
 export default function Header() {
   return (
-    <main className="relative z-10 inset-x-0 top-0 lg:flex lg:w-full">
+    <header className="sticky top-0 z-50">
       <Navbar />
-    </main>
+    </header>
   )
 }
