@@ -1,13 +1,19 @@
+import { Sparkles } from "lucide-react"
 
 export function TypingIndicator() {
   return (
-    <div className="flex gap-2 px-2 py-3 w-10 h-18">
-      <div className="h-[5px] w-[5px] bg-on-background-container rounded-full">
-      </div >
-      <div className="h-[5px] w-[5px] bg-on-background-container rounded-full">
+    <div className="message-in flex items-start gap-3">
+      <div className="landing-solid-primary grid size-9 shrink-0 place-items-center rounded-full" aria-hidden="true">
+        <Sparkles className="size-4" />
       </div>
-      <div className="h-[5px] w-[5px] bg-on-background-container rounded-full">
+      <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-md bg-background-container px-4 py-[18px]">
+        <span className="typing-dot size-1.5 rounded-full bg-on-background/60" />
+        <span className="typing-dot size-1.5 rounded-full bg-on-background/60" />
+        <span className="typing-dot size-1.5 rounded-full bg-on-background/60" />
       </div>
+      <span className="sr-only" role="status">
+        Your advisor is typing
+      </span>
     </div>
   )
 }

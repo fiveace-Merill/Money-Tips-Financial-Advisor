@@ -1,24 +1,54 @@
-import { lexend } from "@/fonts"
-import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar"
+import { Sparkles } from "lucide-react"
 import { clsx } from "clsx"
+import type { Message } from "@/types/message"
+import {
+  formatMessageContent,
+  formatMessageTime,
+} from "@/features/chat/utils/formatMessage"
 
-interface Props {
-  user: string,
-  message: string
-}
+export function MessageBubble({
+  message,
+  initials = "OP",
+}: {
+  message: Message
+  initials?: string
+}) {
+  const isUser = message.role === "user"
+  const paragraphs = formatMessageContent(message.content)
 
-export function MessageBubble({ user, message }: Props) {
-  const url = user == "ai" ? "https://www.github.com/shadcn.png" : "https://github.com/evilrabbit.png"
   return (
-    <div className="flex items-start gap-4">
-      <div className={clsx('h-9 w-9 mt-2 grow-0 bg-inherit border-background-container aspect-square rounded-full flex justify-center items-center', { 'order-2': user === 'human' })}>
-        <Avatar >
-          <AvatarImage src={url} className="rounded-full" />
-          <AvatarFallback className="text-sm">{user == "ai" ? "AI" : "HU"}</AvatarFallback>
-        </Avatar>
+    <div className={clsx("message-in flex items-start gap-3", isUser && "flex-row-reverse")}>
+      <div
+        className={clsx(
+          "grid size-9 shrink-0 place-items-center rounded-full",
+          isUser
+            ? "bg-secondary-container text-xs font-bold text-on-secondary-container"
+            : "landing-solid-primary"
+        )}
+        aria-hidden="true"
+      >
+        {isUser ? initials : <Sparkles className="size-4" />}
       </div>
-      <div className={clsx('basis-11/12 p-2 shadow-sm shadow-background/40 rounded-lg', { 'bg-primary text-on-primary order-1': user === 'human', 'bg-surface text-on-surface': user === 'ai' })}>
-        <p className={`${lexend.className} font-light text-sm p-3 text-md text-pretty lg:text-lg lg:text-justify`}>{message}</p>
+
+      <div
+        className={clsx(
+          "max-w-[85%] rounded-2xl px-4 py-3 shadow-sm",
+          isUser ? "landing-solid-primary rounded-tr-md" : "rounded-tl-md bg-background-container text-on-background-container"
+        )}
+      >
+        {paragraphs.map((paragraph, index) => (
+          <p key={index} className="text-sm leading-relaxed lg:text-[15px]">
+            {paragraph}
+          </p>
+        ))}
+        <p
+          className={clsx(
+            "mt-2 text-[10px]",
+            isUser ? "text-white/90" : "text-on-background/70"
+          )}
+        >
+          {formatMessageTime(message.createdAt)}
+        </p>
       </div>
     </div>
   )
