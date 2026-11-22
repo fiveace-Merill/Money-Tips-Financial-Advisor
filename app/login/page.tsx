@@ -1,74 +1,29 @@
-import { ArrowLeft } from 'lucide-react'
-import Link from 'next/link'
-import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import Link from "next/link";
+import AuthForm from "@/features/auth/components/AuthForm";
+import AuthShell from "@/features/auth/components/AuthShell";
 
-export default function Login() {
+export const metadata = {
+  title: "Log in | Money Tips",
+};
+
+export default function LoginPage() {
   return (
-    <main className="flex flex-col justify-center items-center mt-24 max-h-screen">
-      <Link className="flex  items-center gap-2 py-3" href="/">
-        <ArrowLeft size={18} />
-        <span className="">Back Home</span>
-      </Link>
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
-          <CardAction>
-            <Link href="/signup">
-              <Button variant="link">Sign Up</Button>
-            </Link>
-          </CardAction>
-        </CardHeader>
-        <CardContent>
-          <form>
-            <div className="flex flex-col gap-6">
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
-                  >
-                    Forgot your password?
-                  </a>
-                </div>
-                <Input id="password" type="password" required />
-              </div>
-            </div>
-          </form>
-        </CardContent>
-        <CardFooter className="flex-col gap-2">
-          <Button type="submit" className="w-full">
-            Login
-          </Button>
-          <Button variant="outline" className="w-full">
-            Login with Google
-          </Button>
-        </CardFooter>
-      </Card>
-    </main>
-  )
+    <AuthShell
+      title="Welcome back"
+      subtitle="Log in to pick up where you left off with your financial plans."
+      footer={
+        <>
+          New to Money Tips?{" "}
+          <Link
+            href="/signup"
+            className="font-semibold landing-accent-text hover:underline"
+          >
+            Create an account
+          </Link>
+        </>
+      }
+    >
+      <AuthForm mode="login" />
+    </AuthShell>
+  );
 }
-

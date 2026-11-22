@@ -1,38 +1,141 @@
-import Link from 'next/link'
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
-import { History, Settings, ReceiptText, TrendingUp, X, EllipsisVertical } from "lucide-react"
+"use client"
 
-export default function SidebarMenu({ closeSideBar = () => { } }: { closeSideBar?: (state: boolean) => void }) {
+import Link from "next/link"
+import {
+  EllipsisVertical,
+  History,
+  MessageSquare,
+  Plus,
+  ReceiptText,
+  Settings,
+  Trash2,
+  TrendingUp,
+} from "lucide-react"
+import { useAuth } from "@/features/auth/context/AuthContext"
+import { useChat } from "@/features/chat/context/ChatContext"
+import { useSettings } from "@/features/settings/context/SettingsContext"
+
+const sections = [
+  { icon: History, label: "Chat History", href: "/history" },
+  { icon: ReceiptText, label: "Budget Options", href: "/insights?view=budget" },
+  {
+    icon: TrendingUp,
+    label: "Investment Options",
+    href: "/insights?view=investments",
+  },
+  { icon: Settings, label: "Settings", href: "/settings" },
+]
+
+export default function SidebarMenu({
+  onNavigate = () => {},
+}: {
+  onNavigate?: () => void
+}) {
+  const {
+    sessions,
+    activeSession,
+    startNewChat,
+    selectSession,
+    deleteSession,
+  } = useChat()
+  const { displayName, initials } = useSettings()
+  const { user } = useAuth()
+  const profileName = user?.name ?? displayName
+  const profileInitials = user?.initials ?? initials
+
   return (
-    <div className="w-full morph h-full fixed inset-x-0 inset-y-0 px-3 py-4 z-20 flex flex-col gap-4 transition-transform duration-300 md:px-1 md:py-2 md:flex-row md:static md:items-center lg:px-3 lg:py-4 lg:h-auto lg:flex lg:static lg:flex-col lg:items-start lg:gap-6">
-      <X className="self-end md:hidden lg:hidden" size={32} onClick={() => closeSideBar(false)} />
-      <button className="bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container w-4/6 font-semibold px-2 py-3 rounded-lg text-center md:mr-2 md:order-2 md:w-1/6 md:px-1 md:py-2 md:text-sm lg:mr-0 lg:order-1 lg:w-full lg:px-2 lg:py-3">New Chat</button>
-      <div className="flex flex-col gap-4 md:mx-auto md:gap-12 md:flex-row md:order-1 lg:w-full lg:ml-0 lg:order-2 lg:flex-col lg:gap-1">
-        {[
-          { icon: <History size={22} />, label: "Chat History", route: "/chat" },
-          { icon: <ReceiptText size={22} />, label: "Budget Options", route: "/chat" },
-          { icon: <TrendingUp size={22} />, label: "Investment Options", route: "/chat" },
-          { icon: <Settings size={22} />, label: "Settings", route: "/chat" },
-        ].map(({ icon, label, route }) => (
-          <Link key={label} href={route}>
-            <div key={label} className="hover:bg-secondary hover:text-on-secondary flex gap-3 py-3 items-center cursor-pointer focus:bg-secondary-container/50 focus:text-on-secondary-container rounded-lg px-2 transition md:h-5/6 md:aspect-square md:text-on-primary-container md:bg-primary-container lg:h-auto lg:text-on-background-container lg:bg-inherit lg:w-full lg:aspect-auto">
-              {icon}
-              <p className="text-sm md:hidden lg:block lg:text-md">{label}</p>
-            </div>
+    <div className="flex min-h-full flex-col gap-2 p-3">
+      <button
+        type="button"
+        onClick={() => {
+          startNewChat()
+          onNavigate()
+        }}
+        className="landing-solid-primary flex w-full items-center justify-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold shadow-sm hover:-translate-y-0.5"
+      >
+        <Plus className="size-4" />
+        New Chat
+      </button>
+
+      <p className="mt-3 px-2 text-[11px] font-semibold uppercase tracking-widest text-on-background/60">
+        Recent chats
+      </p>
+      <ul className="mt-1 space-y-1">
+        {sessions.map((session) => {
+          const isActive = session.id === activeSession?.id
+          return (
+            <li key={session.id}>
+              <div
+                className={`group flex items-center gap-1 rounded-xl px-1 transition-colors ${
+                  isActive
+                    ? "bg-primary-container/40"
+                    : "hover:bg-background-container/60"
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    selectSession(session.id)
+                    onNavigate()
+                  }}
+                  aria-current={isActive ? "page" : undefined}
+                  className="flex min-w-0 flex-1 items-center gap-2 rounded-xl px-2 py-2.5 text-left"
+                >
+                  <MessageSquare
+                    className={`size-4 shrink-0 ${
+                      isActive
+                        ? "text-on-primary-container"
+                        : "text-on-background/50"
+                    }`}
+                  />
+                  <span className="truncate text-sm text-on-background">
+                    {session.title}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  aria-label={`Delete chat: ${session.title}`}
+                  onClick={() => deleteSession(session.id)}
+                  className="grid size-8 shrink-0 place-items-center rounded-lg text-on-background/50 opacity-0 transition hover:bg-destructive/10 hover:text-destructive focus-visible:opacity-100 group-hover:opacity-100"
+                >
+                  <Trash2 className="size-3.5" />
+                </button>
+              </div>
+            </li>
+          )
+        })}
+      </ul>
+
+      <nav
+        aria-label="Chat sections"
+        className="mt-auto space-y-1 border-t border-background-container pt-3"
+      >
+        {sections.map(({ icon: Icon, label, href }) => (
+          <Link
+            key={label}
+            href={href}
+            onClick={onNavigate}
+            className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-on-background/80 transition-colors hover:bg-background-container/60 hover:text-on-background"
+          >
+            <Icon className="size-4 text-primary" />
+            {label}
           </Link>
         ))}
-      </div>
-      <div className="h-[100px] px-2 py-3 mt-auto border-t-2 border-background-container justify-self-end flex items-end justify-between w-4/6 md:hidden lg:flex lg:w-full lg:order-3">
-        <div className="flex gap-3 items-center cursor-pointer focus:bg-secondary-container/50 focus:text-on-secondary-container rounded-lg transition">
-          <Avatar>
-            <AvatarImage src="https://github.com/evilrabbit.png" alt="evilrabbit" />
-            <AvatarFallback>OP</AvatarFallback>
-          </Avatar>
-          <p className="text-md text-secondary/80 hover:text-secondary font-bold lg:text-lg">Oscar Piastri</p>
-        </div>
-        <EllipsisVertical size={28} />
-      </div>
+      </nav>
+
+      <Link
+        href="/settings"
+        onClick={onNavigate}
+        className="mt-2 flex items-center gap-3 rounded-xl border-t border-background-container px-3 py-3 transition-colors hover:bg-background-container/60"
+      >
+        <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-bold text-on-secondary-container">
+          {profileInitials}
+        </span>
+        <span className="truncate text-sm font-medium text-on-background">
+          {profileName}
+        </span>
+        <EllipsisVertical className="ml-auto size-4 shrink-0 text-on-background/50" />
+      </Link>
     </div>
   )
 }
-

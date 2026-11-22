@@ -1,29 +1,99 @@
-import Link from 'next/link'
-import { poppins } from '@/fonts'
-import Image from 'next/image'
+"use client"
+
+import Link from "next/link"
+import Image from "next/image"
+import { useState } from "react"
+import { ArrowUpRight, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { EllipsisVertical } from "lucide-react"
+import { useAuth } from "@/features/auth/context/AuthContext"
+
+const navLinks = [
+  { label: "Features", href: "#features" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "About", href: "#about" },
+]
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+  const { user } = useAuth()
+  const ctaHref = user ? "/chat" : "/signup"
+  const ctaLabel = user ? "Go to chat" : "Get Started"
+
   return (
-    <nav className="fixed inset-x-0 top-0 bg-background text-on-secondary-container shadow-md shadow-background my-auto py-3 px-2 flex justify-between items-center lg:justify-start lg:w-11/12 lg:mx-auto lg:bg-surface lg:static lg:shadow-none lg:flex-start">
-      <div className="flex gap-2 items-center">
-        <Image
-          src="/brand_logo.png"
-          width={42}
-          height={42}
-          className=""
-          alt="brand_logo"
-        />
-        <p className={`${poppins.className} text-2xl font-bold`}>Money Tips</p>
+    <nav
+      aria-label="Main navigation"
+      className="landing-glass border-b border-background-container/70"
+    >
+      <div className="mx-auto flex h-[72px] max-w-7xl items-center justify-between px-5 sm:px-8">
+        <Link
+          href="/"
+          aria-label="Money Tips home"
+          className="flex items-center gap-2.5 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+        >
+          <Image src="/brand_logo.png" width={40} height={40} alt="" priority />
+          <span className="text-xl font-bold tracking-tight text-on-background">
+            Money Tips
+          </span>
+        </Link>
+
+        <ul className="hidden items-center gap-9 md:flex">
+          {navLinks.map((link) => (
+            <li key={link.label}>
+              <a href={link.href} className="nav-link">
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        <div className="hidden md:block">
+          <Button
+            asChild
+            className="landing-solid-primary rounded-full px-6 font-semibold shadow-md shadow-primary/20 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-primary/30"
+          >
+            <Link href={ctaHref}>
+              {ctaLabel} <ArrowUpRight className="size-4" />
+            </Link>
+          </Button>
+        </div>
+
+        <button
+          type="button"
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
+          onClick={() => setIsOpen((open) => !open)}
+          className="grid size-11 place-items-center rounded-xl border border-background-container text-on-background transition-colors hover:bg-background-container/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary md:hidden"
+        >
+          {isOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+        </button>
       </div>
-      <ul className="hidden gap-8 justify-start mx-auto lg:flex">
-        <li className="text-xl font-semibold hover:text-secondary/50">Features</li>
-        <li className="text-xl font-semibold hover:text-secondary/50">Pricing</li>
-        <li className="text-xl font-semibold hover:text-secondary/50">About</li>
-      </ul>
-      <Link href="/signup"><Button className="hidden lg:flex justify-center items-center bg-primary text-on-primary text-md rounded-full">Get Started</Button></Link>
-      <Link href="/signup"><EllipsisVertical size={32} className="lg:hidden" /></Link>
+
+      {isOpen && (
+        <div
+          id="mobile-navigation"
+          className="border-t border-background-container/70 px-5 pb-6 pt-3 md:hidden"
+        >
+          <ul className="flex flex-col">
+            {navLinks.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  onClick={() => setIsOpen(false)}
+                  className="block rounded-xl px-3 py-3 text-base font-medium text-on-background transition-colors hover:bg-background-container/60"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <Button asChild className="landing-solid-primary mt-3 w-full rounded-full font-semibold">
+            <Link href={ctaHref} onClick={() => setIsOpen(false)}>
+              {ctaLabel} <ArrowUpRight className="size-4" />
+            </Link>
+          </Button>
+        </div>
+      )}
     </nav>
   )
 }
