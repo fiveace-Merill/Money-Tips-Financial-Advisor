@@ -46,11 +46,11 @@ All color roles (light + dark themes) are defined in `globals.css` using Tailwin
 - **Material Design 3**
 - **TypeScript**
 
-### Backend (planned)
-- **Node.js + Express.js**
-- **PostgreSQL + Prisma ORM**
-- **Redis (Caching financial data)**
-- **OpenAI / Anthropic API**
-- **LangChain.js**
-- **Pinecone / Qdrant (Vector Database)**
+### Backend
+- **Next.js Route Handlers** — one `app/api/[...path]` adapter that dispatches into `server/`
+- **PostgreSQL + Prisma ORM (Neon)** — schema and migrations in `server/prisma/`
+- **OpenRouter free models** — server-fixed AI configuration, no client model picker
+- **Neon Object Storage + pgvector** — planned for RAG file storage and embeddings
+
+All backend source lives in `server/`. The only API file under `app/` is the thin catch-all adapter.
 

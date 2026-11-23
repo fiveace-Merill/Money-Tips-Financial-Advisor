@@ -1,5 +1,5 @@
-import { Prisma } from "@/lib/generated/prisma";
-import { getPrisma } from "@/lib/prisma";
+import { Prisma } from "@/server/generated/prisma";
+import { getPrisma } from "@/server/prisma/client";
 import type { AuthUser } from "@/types/auth";
 import { getInitials } from "./initials";
 import { hashPassword, verifyPassword } from "./password";

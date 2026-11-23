@@ -10,7 +10,7 @@ const databaseUrl =
   "postgresql://user:password@localhost:5432/money_tips";
 
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: "schema.prisma",
   datasource: {
     url: databaseUrl,
   },

@@ -9,7 +9,7 @@ import {
   fieldErrorsFrom,
   loginSchema,
   registerSchema,
-} from "@/lib/auth/validation";
+} from "@/server/auth/validation";
 import { useAuth } from "../context/AuthContext";
 import { AuthApiError } from "../services/authApi";
 
