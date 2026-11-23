@@ -9,6 +9,7 @@ import {
   useState,
 } from "react";
 import type { AuthUser, LoginInput, RegisterInput } from "@/types/auth";
+import { importGuestChats } from "@/features/chat/services/chatApi";
 import { authApi } from "../services/authApi";
 
 type AuthContextValue = {
@@ -31,7 +32,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     authApi
       .me()
-      .then((data) => {
+      .then(async (data) => {
+        if (data.user) {
+          await importGuestChats().catch(() => undefined);
+        }
         if (active) setUser(data.user);
       })
       .catch(() => {
@@ -48,11 +52,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = useCallback(async (input: LoginInput) => {
     const data = await authApi.login(input);
+    await importGuestChats().catch(() => undefined);
     setUser(data.user);
   }, []);
 
   const register = useCallback(async (input: RegisterInput) => {
     const data = await authApi.register(input);
+    await importGuestChats().catch(() => undefined);
     setUser(data.user);
   }, []);
 

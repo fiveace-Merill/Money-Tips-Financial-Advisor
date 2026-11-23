@@ -2,6 +2,7 @@ import type { ChatSession } from "@/types/message"
 
 const STORAGE_KEY = "money-tips.chat-sessions.v1"
 const ACTIVE_KEY = "money-tips.active-session.v1"
+const IMPORT_KEY = "money-tips.guest-import.v1"
 
 /**
  * Local persistence adapter. Replace these two functions with API calls once
@@ -38,4 +39,20 @@ export function loadActiveId(): string | null {
 export function saveActiveId(id: string): void {
   if (typeof window === "undefined") return
   window.localStorage.setItem(ACTIVE_KEY, id)
+}
+
+export function clearGuestChats(): void {
+  if (typeof window === "undefined") return
+  window.localStorage.removeItem(STORAGE_KEY)
+  window.localStorage.removeItem(ACTIVE_KEY)
+}
+
+export function markGuestChatsImported(): void {
+  if (typeof window === "undefined") return
+  window.localStorage.setItem(IMPORT_KEY, "1")
+}
+
+export function hasImportedGuestChats(): boolean {
+  if (typeof window === "undefined") return false
+  return window.localStorage.getItem(IMPORT_KEY) === "1"
 }

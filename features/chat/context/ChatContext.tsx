@@ -10,9 +10,12 @@ import {
   useState,
 } from "react"
 import type { ChatSession, Message } from "@/types/message"
+import { useAuth } from "@/features/auth/context/AuthContext"
 import { titleFromMessage } from "@/features/chat/utils/formatMessage"
+import { getChatState, saveChatState } from "@/features/chat/services/chatApi"
 import { streamAdvisorReply } from "@/features/chat/services/chatService"
 import {
+  clearGuestChats,
   loadActiveId,
   loadSessions,
   saveActiveId,
@@ -76,13 +79,20 @@ interface ChatContextValue {
 const ChatContext = createContext<ChatContextValue | null>(null)
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
+  const { user } = useAuth()
+  const userId = user?.id ?? null
   const [sessions, setSessions] = useState<ChatSession[]>([SEED_SESSION])
   const [activeId, setActiveId] = useState("welcome")
   const [isLoading, setIsLoading] = useState(false)
   const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hydrated, setHydrated] = useState(false)
+  const [loadedUserId, setLoadedUserId] = useState<string | null>(null)
+  const remoteLoaded = Boolean(userId && loadedUserId === userId)
   const streamControllerRef = useRef<AbortController | null>(null)
+  const skipSyncRef = useRef(false)
+  const previousUserIdRef = useRef<string | null>(null)
+  const syncTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -110,18 +120,91 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
-  // Avoid writing partial streamed text to localStorage on every token.
+  // Guest data stays in localStorage. Signed-in data lives only in the database.
   useEffect(() => {
-    if (hydrated && !isStreaming) saveSessions(sessions)
-  }, [sessions, hydrated, isStreaming])
+    if (!hydrated || user || previousUserIdRef.current || isStreaming) return
+    saveSessions(sessions)
+  }, [sessions, hydrated, isStreaming, user])
 
   useEffect(() => {
-    return () => streamControllerRef.current?.abort()
+    if (!hydrated || user || previousUserIdRef.current) return
+    if (activeId) saveActiveId(activeId)
+  }, [activeId, hydrated, user])
+
+  // Never leave one account's chats in guest storage after logout.
+  useEffect(() => {
+    const currentUserId = user?.id ?? null
+    const previousUserId = previousUserIdRef.current
+    previousUserIdRef.current = currentUserId
+
+    if (previousUserId && !currentUserId) {
+      clearGuestChats()
+      setSessions([SEED_SESSION])
+      setActiveId("welcome")
+      setLoadedUserId(null)
+    }
+  }, [user])
+
+  // Load database-backed chats after auth has finished importing guest data.
+  useEffect(() => {
+    if (!hydrated || !userId) return
+
+    let active = true
+
+    void getChatState()
+      .then((state) => {
+        if (!active) return
+
+        const nextSessions = state.sessions.length ? state.sessions : [SEED_SESSION]
+        const firstId = nextSessions[0]?.id ?? "welcome"
+        const nextActiveId = nextSessions.some(
+          (session) => session.id === state.activeId
+        )
+          ? state.activeId
+          : firstId
+
+        skipSyncRef.current = true
+        setSessions(nextSessions)
+        setActiveId(nextActiveId)
+        setLoadedUserId(userId)
+      })
+      .catch(() => {
+        if (!active) return
+        setError("We couldn't load your saved chats. Refresh to try again.")
+      })
+
+    return () => {
+      active = false
+    }
+  }, [hydrated, userId])
+
+  // Debounced database sync for signed-in users; skip partial streamed text.
+  useEffect(() => {
+    if (!hydrated || !userId || !remoteLoaded || isStreaming) return
+
+    if (skipSyncRef.current) {
+      skipSyncRef.current = false
+      return
+    }
+
+    if (syncTimerRef.current) clearTimeout(syncTimerRef.current)
+    syncTimerRef.current = setTimeout(() => {
+      void saveChatState({ sessions, activeId }).catch(() => {
+        setError("We couldn't save your chats. Please try again.")
+      })
+    }, 400)
+
+    return () => {
+      if (syncTimerRef.current) clearTimeout(syncTimerRef.current)
+    }
+  }, [sessions, activeId, hydrated, userId, remoteLoaded, isStreaming])
+
+  useEffect(() => {
+    return () => {
+      streamControllerRef.current?.abort()
+      if (syncTimerRef.current) clearTimeout(syncTimerRef.current)
+    }
   }, [])
-
-  useEffect(() => {
-    if (hydrated && activeId) saveActiveId(activeId)
-  }, [activeId, hydrated])
 
   const activeSession =
     sessions.find((session) => session.id === activeId) ?? sessions[0] ?? null

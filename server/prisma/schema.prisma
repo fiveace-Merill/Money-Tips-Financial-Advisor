@@ -8,13 +8,16 @@ datasource db {
 }
 
 model User {
-  id           String    @id @default(cuid())
-  email        String    @unique
+  id           String        @id @default(cuid())
+  email        String        @unique
   name         String
   passwordHash String
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  activeChatId String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
   sessions     Session[]
+  chatSessions ChatSession[]
+  guestImport  GuestImport?
 }
 
 model Session {
@@ -26,4 +29,38 @@ model Session {
   createdAt DateTime @default(now())
 
   @@index([userId])
+}
+
+enum ChatMessageRole {
+  USER
+  AI
+}
+
+model ChatSession {
+  id        String        @id
+  userId    String
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  createdAt DateTime
+  updatedAt DateTime
+  messages  ChatMessage[]
+
+  @@index([userId, updatedAt])
+}
+
+model ChatMessage {
+  id        String          @id
+  sessionId String
+  session   ChatSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  role      ChatMessageRole
+  content   String
+  createdAt DateTime
+
+  @@index([sessionId, createdAt])
+}
+
+model GuestImport {
+  userId     String   @id
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  importedAt DateTime @default(now())
 }
