@@ -6,11 +6,12 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react"
 import type { ChatSession, Message } from "@/types/message"
 import { titleFromMessage } from "@/features/chat/utils/formatMessage"
-import { requestAdvisorReply } from "@/features/chat/services/chatService"
+import { streamAdvisorReply } from "@/features/chat/services/chatService"
 import {
   loadActiveId,
   loadSessions,
@@ -61,6 +62,7 @@ interface ChatContextValue {
   sessions: ChatSession[]
   activeSession: ChatSession | null
   isLoading: boolean
+  isStreaming: boolean
   isHydrated: boolean
   error: string | null
   startNewChat: () => void
@@ -77,8 +79,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [sessions, setSessions] = useState<ChatSession[]>([SEED_SESSION])
   const [activeId, setActiveId] = useState("welcome")
   const [isLoading, setIsLoading] = useState(false)
+  const [isStreaming, setIsStreaming] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [hydrated, setHydrated] = useState(false)
+  const streamControllerRef = useRef<AbortController | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -106,9 +110,14 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }
   }, [])
 
+  // Avoid writing partial streamed text to localStorage on every token.
   useEffect(() => {
-    if (hydrated) saveSessions(sessions)
-  }, [sessions, hydrated])
+    if (hydrated && !isStreaming) saveSessions(sessions)
+  }, [sessions, hydrated, isStreaming])
+
+  useEffect(() => {
+    return () => streamControllerRef.current?.abort()
+  }, [])
 
   useEffect(() => {
     if (hydrated && activeId) saveActiveId(activeId)
@@ -152,11 +161,21 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       if (!text || !activeSession || isLoading) return
 
       setError(null)
+      streamControllerRef.current?.abort()
+      const controller = new AbortController()
+      streamControllerRef.current = controller
 
       const userMessage: Message = {
         id: crypto.randomUUID(),
         role: "user",
         content: text,
+        createdAt: new Date().toISOString(),
+      }
+      const placeholderId = crypto.randomUUID()
+      const placeholder: Message = {
+        id: placeholderId,
+        role: "ai",
+        content: "",
         createdAt: new Date().toISOString(),
       }
       const conversation = [...activeSession.messages, userMessage]
@@ -172,35 +191,78 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
             ? {
                 ...session,
                 title,
-                messages: conversation,
+                messages: [...conversation, placeholder],
                 updatedAt: new Date().toISOString(),
               }
             : session
         )
       )
       setIsLoading(true)
+      setIsStreaming(true)
 
       try {
-        const reply = await requestAdvisorReply(conversation)
+        const reply = await streamAdvisorReply(conversation, {
+          signal: controller.signal,
+          onDelta: (delta) => {
+            setSessions((previous) =>
+              previous.map((session) =>
+                session.id === sessionId
+                  ? {
+                      ...session,
+                      messages: session.messages.map((message) =>
+                        message.id === placeholderId
+                          ? { ...message, content: message.content + delta }
+                          : message
+                      ),
+                      updatedAt: new Date().toISOString(),
+                    }
+                  : session
+              )
+            )
+          },
+        })
+
         setSessions((previous) =>
           previous.map((session) =>
             session.id === sessionId
               ? {
                   ...session,
-                  messages: [...session.messages, reply],
+                  messages: session.messages.map((message) =>
+                    message.id === placeholderId ? reply : message
+                  ),
                   updatedAt: new Date().toISOString(),
                 }
               : session
           )
         )
       } catch (cause) {
-        setError(
-          cause instanceof Error
-            ? cause.message
-            : "Something went wrong. Please try again."
+        setSessions((previous) =>
+          previous.map((session) =>
+            session.id === sessionId
+              ? {
+                  ...session,
+                  messages: session.messages.filter(
+                    (message) => message.id !== placeholderId
+                  ),
+                }
+              : session
+          )
         )
+
+        if (!controller.signal.aborted) {
+          setError(
+            cause instanceof Error
+              ? cause.message
+              : "Something went wrong. Please try again."
+          )
+        }
       } finally {
-        setIsLoading(false)
+        // A superseded request must not reset the state of the active stream.
+        if (streamControllerRef.current === controller) {
+          streamControllerRef.current = null
+          setIsStreaming(false)
+          setIsLoading(false)
+        }
       }
     },
     [activeSession, isLoading]
@@ -211,6 +273,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       sessions,
       activeSession,
       isLoading,
+      isStreaming,
       isHydrated: hydrated,
       error,
       startNewChat,
@@ -224,6 +287,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
       sessions,
       activeSession,
       isLoading,
+      isStreaming,
       hydrated,
       error,
       startNewChat,

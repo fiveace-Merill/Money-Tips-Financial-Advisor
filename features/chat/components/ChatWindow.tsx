@@ -14,7 +14,7 @@ const suggestions = [
 ]
 
 export default function ChatWindow() {
-  const { activeSession, isLoading, error, clearError, sendMessage } = useChat()
+  const { activeSession, isLoading, isStreaming, error, clearError, sendMessage } = useChat()
   const { initials } = useSettings()
   const bottomRef = useRef<HTMLDivElement>(null)
   const messages = activeSession?.messages ?? []
@@ -51,7 +51,7 @@ export default function ChatWindow() {
               initials={initials}
             />
           ))}
-          {isLoading && <TypingIndicator />}
+          {isLoading && !isStreaming && <TypingIndicator />}
         </div>
 
         {messages.length === 1 && !isLoading && (
