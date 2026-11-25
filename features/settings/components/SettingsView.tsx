@@ -81,8 +81,8 @@ export default function SettingsView() {
         Settings
       </h1>
       <p className="mt-3 max-w-2xl text-sm leading-relaxed text-on-background/75 sm:text-base">
-        Personalise how Money Tips looks and feels. Your preferences are saved
-        on this device and applied everywhere.
+        Personalise how Money Tips looks and feels. Guest preferences stay on
+        this device; signed-in themes sync with your account.
       </p>
 
       <div className="mt-9 space-y-5">
@@ -336,9 +336,10 @@ export default function SettingsView() {
             </div>
           </dl>
           <p className="mt-4 text-xs leading-relaxed text-on-background/70">
-            Account details are stored securely in PostgreSQL. Conversations and
-            preferences are still stored on this device. Financial guidance
-            shown here is illustrative and is not personal financial advice.
+            Account details are stored securely in PostgreSQL. Guest
+            conversations and preferences stay on this device. Financial
+            guidance shown here is illustrative and is not personal financial
+            advice.
           </p>
         </section>
       </div>

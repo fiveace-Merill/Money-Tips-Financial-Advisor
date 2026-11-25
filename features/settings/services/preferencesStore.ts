@@ -1,5 +1,6 @@
 import type { ThemePreference } from "@/features/settings/services/preferencesStorage"
 import {
+  clearGuestPreferences,
   DEFAULT_DISPLAY_NAME,
   loadDisplayName,
   loadTheme,
@@ -42,6 +43,11 @@ export function updateStoredTheme(theme: ThemePreference): void {
 
 export function updateStoredName(name: string): void {
   saveDisplayName(name)
+  emit()
+}
+
+export function clearStoredPreferences(): void {
+  clearGuestPreferences()
   emit()
 }
 

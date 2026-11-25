@@ -18,6 +18,7 @@ model User {
   sessions     Session[]
   chatSessions ChatSession[]
   guestImport  GuestImport?
+  preference   UserPreference?
 }
 
 model Session {
@@ -34,6 +35,19 @@ model Session {
 enum ChatMessageRole {
   USER
   AI
+}
+
+enum ThemePreference {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+model UserPreference {
+  userId    String          @id
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  theme     ThemePreference
+  updatedAt DateTime        @updatedAt
 }
 
 model ChatSession {
