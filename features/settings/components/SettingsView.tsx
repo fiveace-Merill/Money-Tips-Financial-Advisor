@@ -51,13 +51,14 @@ export default function SettingsView() {
   const [saved, setSaved] = useState(false)
   const [confirmClear, setConfirmClear] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
-  const nameValue = draft ?? displayName
+  const nameValue = user ? user.name : (draft ?? displayName)
 
   const conversationCount = sessions.filter((session) =>
     session.messages.some((message) => message.role === "user")
   ).length
 
   const saveName = () => {
+    if (user) return
     const next = nameValue.trim()
     if (!next) return
     setDisplayName(next)
@@ -67,7 +68,7 @@ export default function SettingsView() {
 
   const resetPreferences = () => {
     setTheme("system")
-    setDisplayName(DEFAULT_DISPLAY_NAME)
+    if (!user) setDisplayName(DEFAULT_DISPLAY_NAME)
     setDraft(null)
     setSaved(false)
   }
@@ -149,7 +150,7 @@ export default function SettingsView() {
           </h2>
           <p className="mt-1 text-sm text-on-background/75">
             {user
-              ? "Used when you're browsing without an account. Your account name appears in chat."
+              ? "Your account name is used in chat and cannot be changed here."
               : "This name appears in your chat messages and sidebar."}
           </p>
 
@@ -166,6 +167,7 @@ export default function SettingsView() {
                 type="text"
                 maxLength={40}
                 value={nameValue}
+                readOnly={Boolean(user)}
                 onChange={(event) => {
                   setDraft(event.target.value)
                   setSaved(false)
@@ -173,26 +175,37 @@ export default function SettingsView() {
                 onKeyDown={(event) => {
                   if (event.key === "Enter") saveName()
                 }}
-                className="mt-2 w-full rounded-xl border border-background-container bg-surface px-4 py-3 text-sm text-on-background outline-none transition-colors focus:border-primary"
+                className={`mt-2 w-full rounded-xl border border-background-container bg-surface px-4 py-3 text-sm text-on-background outline-none transition-colors focus:border-primary ${user ? "opacity-75" : ""}`}
               />
             </div>
             <div className="flex items-center gap-3 sm:pb-0.5">
               <span className="grid size-12 shrink-0 place-items-center rounded-full bg-secondary-container text-sm font-bold text-on-secondary-container">
                 {initials}
               </span>
-              <button
-                type="button"
-                onClick={saveName}
-                disabled={!nameValue.trim() || nameValue.trim() === displayName}
-                className="landing-solid-primary inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Save className="size-4" aria-hidden="true" />
-                Save name
-              </button>
+              {user ? (
+                <span className="inline-flex items-center gap-2 text-xs font-medium text-on-background/70">
+                  <Check className="size-4" aria-hidden="true" />
+                  Account name
+                </span>
+              ) : (
+                <button
+                  type="button"
+                  onClick={saveName}
+                  disabled={!nameValue.trim() || nameValue.trim() === displayName}
+                  className="landing-solid-primary inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Save className="size-4" aria-hidden="true" />
+                  Save name
+                </button>
+              )}
             </div>
           </div>
           <p className="mt-3 text-xs text-on-background/70" role="status">
-            {saved ? "Your display name has been saved." : "Changes are stored on this device."}
+            {saved
+              ? "Your display name has been saved."
+              : user
+                ? "Your account name is managed in your profile."
+                : "Changes are stored on this device."}
           </p>
         </section>
 
@@ -264,7 +277,8 @@ export default function SettingsView() {
           <h2 className="text-lg font-bold text-on-background">Conversations</h2>
           <p className="mt-1 text-sm text-on-background/75">
             You have {conversationCount} saved conversation
-            {conversationCount === 1 ? "" : "s"} on this device.
+            {conversationCount === 1 ? "" : "s"}{" "}
+            {user ? "in your account." : "on this device."}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-background-container px-4 py-4">

@@ -50,13 +50,14 @@ const SettingsContext = createContext<SettingsContextValue | null>(null)
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
   const userId = user?.id ?? null
+  const authInitials = user?.initials ?? ""
 
   const localTheme = useSyncExternalStore(
     subscribePreferences,
     getThemeSnapshot,
     getServerThemeSnapshot
   )
-  const displayName = useSyncExternalStore(
+  const localDisplayName = useSyncExternalStore(
     subscribePreferences,
     getNameSnapshot,
     getServerNameSnapshot
@@ -75,6 +76,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const theme: ThemePreference = userId
     ? (remoteTheme?.userId === userId ? remoteTheme.theme : "system")
     : localTheme
+  const displayName = user ? user.name : localDisplayName
+  const initials = user
+    ? authInitials || initialsOf(user.name)
+    : initialsOf(localDisplayName)
 
   const resolvedTheme: "light" | "dark" =
     theme === "system" ? (systemDark ? "dark" : "light") : theme
@@ -145,9 +150,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     [userId]
   )
 
-  const setDisplayName = useCallback((next: string) => {
-    updateStoredName(next.trim() || DEFAULT_DISPLAY_NAME)
-  }, [])
+  const setDisplayName = useCallback(
+    (next: string) => {
+      if (userId) return
+      updateStoredName(next.trim() || DEFAULT_DISPLAY_NAME)
+    },
+    [userId]
+  )
 
   const value = useMemo<SettingsContextValue>(
     () => ({
@@ -155,10 +164,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       resolvedTheme,
       setTheme,
       displayName,
-      initials: initialsOf(displayName),
+      initials,
       setDisplayName,
     }),
-    [theme, resolvedTheme, setTheme, displayName, setDisplayName]
+    [theme, resolvedTheme, setTheme, displayName, initials, setDisplayName]
   )
 
   return (

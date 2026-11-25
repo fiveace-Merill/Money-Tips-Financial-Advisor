@@ -11,7 +11,6 @@ import {
   Trash2,
   TrendingUp,
 } from "lucide-react"
-import { useAuth } from "@/features/auth/context/AuthContext"
 import { useChat } from "@/features/chat/context/ChatContext"
 import { useSettings } from "@/features/settings/context/SettingsContext"
 
@@ -39,9 +38,6 @@ export default function SidebarMenu({
     deleteSession,
   } = useChat()
   const { displayName, initials } = useSettings()
-  const { user } = useAuth()
-  const profileName = user?.name ?? displayName
-  const profileInitials = user?.initials ?? initials
 
   return (
     <div className="flex min-h-full flex-col gap-2 p-3">
@@ -129,10 +125,10 @@ export default function SidebarMenu({
         className="mt-2 flex items-center gap-3 rounded-xl border-t border-background-container px-3 py-3 transition-colors hover:bg-background-container/60"
       >
         <span className="grid size-9 shrink-0 place-items-center rounded-full bg-secondary-container text-xs font-bold text-on-secondary-container">
-          {profileInitials}
+          {initials}
         </span>
         <span className="truncate text-sm font-medium text-on-background">
-          {profileName}
+          {displayName}
         </span>
         <EllipsisVertical className="ml-auto size-4 shrink-0 text-on-background/50" />
       </Link>
